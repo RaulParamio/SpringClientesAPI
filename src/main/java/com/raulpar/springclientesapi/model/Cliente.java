@@ -39,6 +39,7 @@ public class Cliente {
     @Column(name = "provincia")
     private String provincia;
 
+
     @JsonIgnore
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pedido> pedidos;
