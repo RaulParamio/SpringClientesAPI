@@ -2,43 +2,82 @@ package com.raulpar.springclientesapi.controller;
 
 import com.raulpar.springclientesapi.model.Cliente;
 import com.raulpar.springclientesapi.service.ClienteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
 
+import java.util.List;
+
+@AllArgsConstructor
 @RestController
-@RequestMapping("/api/cliente")
+@RequestMapping("/api/clientes")
 public class ClienteController {
 
     private final ClienteService clienteservice;
 
-    public ClienteController(ClienteService clienteservice){
-        this.clienteservice = clienteservice;
-    }
 
+    @Operation(summary = "Obtener todos los clientes / Get all customers")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de clientes obtenida correctamente")
+    })
     @GetMapping
     public List<Cliente> getAll() {
         return clienteservice.findAll();
     }
 
+
+    @Operation(summary = "Obtener cliente por ID / Get customer by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
+            @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
+    })
     @GetMapping("/{id}")
-    public Optional<Cliente> getById(@PathVariable Long id) {
-        return clienteservice.findById(id);
+    public ResponseEntity<Cliente> getById(@PathVariable Long id) {
+        return clienteservice.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Guardar Cliente / Save customer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente guardado correctamente")
+    })
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Cliente create(@RequestBody Cliente cliente) {
         return clienteservice.save(cliente);
     }
 
+    @Operation(summary = "Borrar Cliente por ID / Delete customer by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente borrado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
+    })
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        clienteservice.deleteById(id);
+    public  ResponseEntity<Void> delete(@PathVariable Long id) {
+        boolean eliminado = clienteservice.deleteById(id);
+        if (eliminado) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
+    @Operation(summary = "Obtener Cliente por DNI / Get customer by DNI (National ID)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente encontrado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
+    })
     @GetMapping("/dni/{dni}")
-    public Optional<Cliente> getByDni(@PathVariable String dni) {
-        return clienteservice.findByDni(dni);
+    public ResponseEntity<Cliente> getByDni(@PathVariable String dni) {
+        return clienteservice.findByDni(dni)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+
     }
 }

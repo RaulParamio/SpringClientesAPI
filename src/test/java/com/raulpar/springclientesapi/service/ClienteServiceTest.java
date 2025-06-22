@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
             Cliente cliente = new Cliente("12345678A", "Juan", "Pérez", "juan@example.com", "Calle Mendez", "Madrid", "Madrid");
             Cliente guardado = clienteService.save(cliente);
 
-            //Optional para evitar error NullPointerException
+            //Optional -> para evitar error NullPointerException , y usamos el metodo para probarlo.
             Optional<Cliente> encontrado = clienteService.findById(guardado.getIdCliente());
 
             //Comprobamos que exista, y que se llame con el nombre del cliente que buscamos
