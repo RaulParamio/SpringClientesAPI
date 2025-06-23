@@ -23,7 +23,7 @@ public class ClienteController {
 
     @Operation(summary = "Obtener todos los clientes / Get all customers")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de clientes obtenida correctamente")
+            @ApiResponse(responseCode = "200", description = "Lista de clientes obtenida correctamente / Customer list retrieved successfully")
     })
     @GetMapping
     public List<Cliente> getAll() {
@@ -33,8 +33,8 @@ public class ClienteController {
 
     @Operation(summary = "Obtener cliente por ID / Get customer by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
-            @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
+            @ApiResponse(responseCode = "200", description = "Cliente encontrado / Customer found"),
+            @ApiResponse(responseCode = "404", description = "Cliente no encontrado / Customer not found")
     })
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> getById(@PathVariable Long id) {
@@ -45,7 +45,7 @@ public class ClienteController {
 
     @Operation(summary = "Guardar Cliente / Save customer")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente guardado correctamente")
+            @ApiResponse(responseCode = "201", description = "Cliente guardado correctamente / Customer saved succesfully")
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -55,8 +55,8 @@ public class ClienteController {
 
     @Operation(summary = "Borrar Cliente por ID / Delete customer by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente borrado correctamente"),
-            @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
+            @ApiResponse(responseCode = "200", description = "Cliente borrado correctamente / Customer deleted succesfully"),
+            @ApiResponse(responseCode = "404", description = "Cliente no encontrado / Customer not found")
     })
     @DeleteMapping("/{id}")
     public  ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -70,8 +70,8 @@ public class ClienteController {
 
     @Operation(summary = "Obtener Cliente por DNI / Get customer by DNI (National ID)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente encontrado correctamente"),
-            @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
+            @ApiResponse(responseCode = "200", description = "Cliente encontrado correctamente / Customer found succesfully"),
+            @ApiResponse(responseCode = "404", description = "Cliente no encontrado / Customer not found")
     })
     @GetMapping("/dni/{dni}")
     public ResponseEntity<Cliente> getByDni(@PathVariable String dni) {

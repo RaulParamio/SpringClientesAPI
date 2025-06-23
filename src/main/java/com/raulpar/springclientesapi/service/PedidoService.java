@@ -33,8 +33,13 @@ public class PedidoService {
         return pedidoRepository.save(pedido);
     }
 
-    public void deleteById(Long id) {
-        pedidoRepository.deleteById(id);
+    public boolean deleteById(Long id) {
+        if(pedidoRepository.existsById(id)){
+            pedidoRepository.deleteById(id);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
