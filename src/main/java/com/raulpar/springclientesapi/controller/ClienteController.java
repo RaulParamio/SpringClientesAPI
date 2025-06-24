@@ -5,17 +5,16 @@ import com.raulpar.springclientesapi.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping("/api/clientes")
+@RequiredArgsConstructor
 public class ClienteController {
 
     private final ClienteService clienteservice;
@@ -59,7 +58,7 @@ public class ClienteController {
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado / Customer not found")
     })
     @DeleteMapping("/{id}")
-    public  ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         boolean eliminado = clienteservice.deleteById(id);
         if (eliminado) {
             return ResponseEntity.ok().build();

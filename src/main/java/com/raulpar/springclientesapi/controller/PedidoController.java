@@ -5,7 +5,7 @@ import com.raulpar.springclientesapi.service.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/pedido")
 public class PedidoController {
@@ -73,9 +73,9 @@ public class PedidoController {
             @ApiResponse(responseCode = "200", description = "Pedidos encontrados / Orders found"),
     })
     @GetMapping("/fecha")
-    public ResponseEntity<List<Pedido>> getByFecha(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate fecha) {
+    public ResponseEntity<List<Pedido>> getByFecha(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
         List<Pedido> pedidos = pedidoService.findByFecha(fecha);
-            return ResponseEntity.ok(pedidos);
+        return ResponseEntity.ok(pedidos);
     }
 
 }

@@ -2,6 +2,7 @@ package com.raulpar.springclientesapi.service;
 
 import com.raulpar.springclientesapi.model.Pedido;
 import com.raulpar.springclientesapi.repository.PedidoRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,13 +14,11 @@ import java.util.Optional;
 /**
  * Servicio que gestiona la lógica de negocio relacionada con los pedidos.
  */
+@AllArgsConstructor
 @Service
 public class PedidoService {
     private final PedidoRepository pedidoRepository;
 
-    public PedidoService(PedidoRepository pedidoRepository) {
-        this.pedidoRepository = pedidoRepository;
-    }
 
     public List<Pedido> findAll() {
         return pedidoRepository.findAll();
