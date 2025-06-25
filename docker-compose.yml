@@ -1,0 +1,30 @@
+version: '3.8'   # Versión de la sintaxis de Docker Compose
+
+services:        # Definición de los servicios (contenedores) que formarán la aplicación
+
+  app:           # Servicio para aplicación Spring Boot
+    build: .   # Construye la imagen Docker a partir del Dockerfile ubicado en la carpeta raíz
+    ports:
+      - "8080:8080"  # Mapea el puerto 8080 del contenedor al puerto 8080 de la máquina host
+    depends_on:
+      - mysql      # Define que este servicio depende del servicio 'mysql' y esperará a que esté listo
+    environment:   # Variables de entorno que se pasan al contenedor para configurar la conexión a la base de datos
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/AccesoaDatos?useSSL=false&serverTimezone=UTC   # URL de conexión a MySQL
+      SPRING_DATASOURCE_USERNAME: root    # Usuario para la base de datos
+      SPRING_DATASOURCE_PASSWORD: root    # Contraseña para la base de datos
+    volumes:
+      - ./logs:/app/logs   # Mapea la carpeta 'logs' de la máquina local a '/app/logs' dentro del contenedor para guardar logs persistentes
+
+  mysql:           # Servicio para la base de datos MySQL
+    image: mysql:8.0   # Imagen oficial de MySQL versión 8.0
+    restart: always    # Reinicia el contenedor automáticamente si falla o se detiene
+    environment:       # Variables de entorno para configurar MySQL al iniciar
+      MYSQL_ROOT_PASSWORD: root   # Contraseña del usuario root de MySQL
+      MYSQL_DATABASE: AccesoaDatos  # Nombre de la base de datos que se crea automáticamente al iniciar MySQL
+    ports:
+      - "3306:3306"   # Mapea el puerto 3306 del contenedor al puerto 3306 de la máquina host para conexiones externas
+    volumes:
+      - mysql_data:/var/lib/mysql   # Volumen persistente para que los datos de MySQL no se pierdan al reiniciar
+
+volumes:
+  mysql_data:     # Declaración del volumen 'mysql_data' usado para persistencia de la base de datos

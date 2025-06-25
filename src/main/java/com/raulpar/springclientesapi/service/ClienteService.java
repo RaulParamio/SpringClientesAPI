@@ -19,14 +19,29 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
+    /**
+     * Devuelve todos los clientes registrados en la base de datos.
+     */
     public List<Cliente> findAll() {
         return clienteRepository.findAll();
     }
 
+    /**
+     * Busca un cliente por su ID.
+     *
+     * @param id ID del cliente
+     * @return Optional que contiene el cliente si se encuentra
+     */
     public Optional<Cliente> findById(Long id) {
         return clienteRepository.findById(id);
     }
 
+    /**
+     * Guarda o actualiza un cliente en la base de datos.
+     *
+     * @param cliente Objeto cliente a persistir
+     * @return Cliente guardado
+     */
     public Cliente save(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
@@ -46,8 +61,14 @@ public class ClienteService {
         }
     }
 
-
+    /**
+     * Busca un cliente por su DNI.
+     *
+     * @param dni DNI del cliente
+     * @return Optional con el cliente si se encuentra
+     */
     public Optional<Cliente> findByDni(String dni) {
         return clienteRepository.findByDni(dni);
     }
+
 }

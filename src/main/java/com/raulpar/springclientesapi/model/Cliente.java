@@ -26,7 +26,7 @@ public class Cliente {
     private String dni;
 
     @Column(name = "nombre")
-    @Schema(description = "Nombre del cliente / Customer's first name .", example = "Fernando")
+    @Schema(description = "Nombre del cliente / Customer's first name ", example = "Fernando")
     private String nombre;
 
     @Column(name = "apellidos")
@@ -49,7 +49,10 @@ public class Cliente {
     @Schema(description = "Provincia del cliente / Customer's Province.", example = "Madrid")
     private String provincia;
 
-
+    /**
+     * Lista de pedidos asociados a este cliente.
+     * Se ignora en la serialización JSON para evitar ciclos infinitos.
+     */
     @JsonIgnore
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pedido> pedidos;

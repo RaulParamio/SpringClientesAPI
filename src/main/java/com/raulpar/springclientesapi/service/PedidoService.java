@@ -19,19 +19,39 @@ import java.util.Optional;
 public class PedidoService {
     private final PedidoRepository pedidoRepository;
 
-
+    /**
+     * Recupera todos los pedidos almacenados.
+     */
     public List<Pedido> findAll() {
         return pedidoRepository.findAll();
     }
 
+    /**
+     * Busca un pedido por su ID.
+     *
+     * @param id Identificador del pedido
+     * @return Pedido encontrado, si existe
+     */
     public Optional<Pedido> findById(Long id) {
         return pedidoRepository.findById(id);
     }
 
+    /**
+     * Guarda un nuevo pedido o actualiza uno existente.
+     *
+     * @param pedido Pedido a guardar
+     * @return Pedido guardado
+     */
     public Pedido save(Pedido pedido) {
         return pedidoRepository.save(pedido);
     }
 
+    /**
+     * Elimina un pedido por ID, si existe.
+     *
+     * @param id ID del pedido
+     * @return true si se eliminó correctamente, false si no existe
+     */
     public boolean deleteById(Long id) {
         if(pedidoRepository.existsById(id)){
             pedidoRepository.deleteById(id);
@@ -42,13 +62,14 @@ public class PedidoService {
     }
 
     /**
-     * Obtiene la lista de pedidos realizados en una fecha específica.
-     * El rango de búsqueda es desde el inicio hasta el final del día indicado.
-     * Se pone automaticamente la hora a la que inicia el dia y acaba ya que buscamos sacar los pedidos del dia
-     * sin necesidad de buscar la hora, es necesario poner horas ya que la base de datos funciona con DateTime
+     * Devuelve los pedidos realizados en una fecha específica.
      *
-     * @param fecha Fecha para filtrar los pedidos (solo día, sin hora).
-     * @return Lista de pedidos realizados en la fecha especificada.
+     * El rango de búsqueda va desde las 00:00 hasta las 23:59 del día indicado,
+     * ya que la base de datos almacena la fecha como DateTime y es necesario
+     * incluir el día completo para obtener resultados precisos.
+     *
+     * @param fecha Día por el que se filtrarán los pedidos (sin hora).
+     * @return Lista de pedidos realizados en esa fecha.
      */
     public List<Pedido> findByFecha(LocalDate fecha) {
         LocalDateTime desde = fecha.atStartOfDay(); // 2025-04-19T00:00:00
