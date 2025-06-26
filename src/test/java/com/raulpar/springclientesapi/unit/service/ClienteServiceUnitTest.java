@@ -1,4 +1,4 @@
-package unit.service;
+package com.raulpar.springclientesapi.unit.service;
 
 import com.raulpar.springclientesapi.model.Cliente;
 import com.raulpar.springclientesapi.repository.ClienteRepository;
