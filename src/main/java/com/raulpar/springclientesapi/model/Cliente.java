@@ -3,6 +3,7 @@ package com.raulpar.springclientesapi.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Cliente {
     @Schema(description = "Identificador único del cliente / Unique identifier of the customer.", example = "1")
     private Long idCliente;
 
+    @NotBlank(message = "DNI obligatorio")
     @Column(name = "dni", unique = true, nullable = false)
     @Schema(description = "DNI del cliente / National ID (DNI) of the customer.", example = "12345678Z")
     private String dni;
