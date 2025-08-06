@@ -11,23 +11,23 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Entidad que representa a un pedido / Entity that represents an order.")
+@Schema(description = "Entity that represents an order.")
 public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "numPedido")
-    @Schema(description = "Identificador único del pedido / Order's Unique identifier.", example = "1")
+    @Schema(description = "Order's Unique identifier.", example = "1")
     private Long numPedido;
 
     @ManyToOne
     @JoinColumn(name = "idCliente", nullable = false)
-    @Schema(description = "Identificador único del cliente / Customer's Unique identifier.", example = "1")
+    @Schema(description = "Customer's Unique identifier.", example = "1")
     private Cliente cliente;
 
     @Column(name = "fecha", updatable = false)
     @CreationTimestamp
-    @Schema(description = "Fecha del pedido / Order's Date.", example = "2025-04-19")
+    @Schema(description = "Order's Date.", example = "2025-04-19")
     private LocalDateTime fecha;
 
     public Pedido(Cliente cliente) {

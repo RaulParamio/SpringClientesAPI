@@ -1,11 +1,12 @@
 package com.raulpar.springclientesapi.web.controller;
 
 import com.raulpar.springclientesapi.controller.ClienteController;
-import com.raulpar.springclientesapi.model.Cliente;
+import com.raulpar.springclientesapi.dto.ClienteOutputDetailDto;
+import com.raulpar.springclientesapi.dto.ClienteOutputDto;
+import com.raulpar.springclientesapi.mapper.ClienteMapper;
 import com.raulpar.springclientesapi.service.ClienteService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
@@ -34,29 +35,28 @@ class ClienteControllerWebTest {
     @Autowired
     private ClienteService clienteService;
 
-    // Inicializa los mocks antes de cada test
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     // Configuración de Spring para registrar un mock de ClienteService
     @Configuration
     static class TestConfig {
         @Bean
         public ClienteService clienteService() {
-            return org.mockito.Mockito.mock(ClienteService.class);
+            return Mockito.mock(ClienteService.class);
+        }
+
+        @Bean
+        public ClienteMapper clienteMapper() {
+            return Mockito.mock(ClienteMapper.class);
         }
     }
 
     @Test
     void testGetAll() throws Exception {
         // Datos de prueba
-        Cliente c1 = new Cliente("12345678A", "Juan", "Pérez", "juan@example.com", "Calle Mendez", "Madrid", "Madrid");
-        Cliente c2 = new Cliente("87654321B", "Lucía", "Gómez", "lucia@example.com", "Avenida Palacios", "Sevilla", "Sevilla");
+        ClienteOutputDto c1 = new ClienteOutputDto(1L,"12345678A", "Juan", "Pérez", "juan@gmail.com");
+        ClienteOutputDto c2 = new ClienteOutputDto(2L,"87654321B", "Lucía", "Gómez", "lucia@gmail.com");
 
         // Mock del servicio: devuelve una lista con dos clientes
-        when(clienteService.findAll()).thenReturn(Arrays.asList(c1, c2));
+        when(clienteService.findAll()).thenReturn(List.of(c1, c2));
 
         // Petición GET y verificación de que hay dos elementos y coinciden los DNIs
         mockMvc.perform(get("/api/clientes"))
@@ -69,8 +69,7 @@ class ClienteControllerWebTest {
     @Test
     void testGetByIdFound() throws Exception {
         // Cliente de prueba con ID asignado
-        Cliente cliente = new Cliente("12345678A", "Juan", "Pérez", "juan@example.com", "Calle Mendez", "Madrid", "Madrid");
-        cliente.setIdCliente(1L);
+        ClienteOutputDetailDto cliente = new ClienteOutputDetailDto(1L, "12345678A", "Juan", "Pérez", "juan@gmail.com", "Calle Mendez", "Madrid", "Madrid");
 
         // Mock del servicio: cliente encontrado por ID
         when(clienteService.findById(1L)).thenReturn(Optional.of(cliente));
@@ -93,21 +92,25 @@ class ClienteControllerWebTest {
 
     @Test
     void testDeleteFound() throws Exception {
-        // Mock del servicio: cliente existe y es eliminado
-        when(clienteService.deleteById(1L)).thenReturn(true);
+        Long id = 1L;
+        ClienteOutputDetailDto dto = new ClienteOutputDetailDto(1L,"12345678A", "Juan", "Pérez", "juan@example.com", "Calle Mendez", "Madrid", "Madrid");
 
-        // Petición DELETE y verificación de 200 OK
-        mockMvc.perform(delete("/api/clientes/1"))
-                .andExpect(status().isOk());
+        when(clienteService.deleteById(id)).thenReturn(Optional.of(dto));
+
+        mockMvc.perform(delete("/api/clientes/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.dni").value("12345678A"))
+                .andExpect(jsonPath("$.nombre").value("Juan"));
     }
 
     @Test
     void testDeleteNotFound() throws Exception {
+        Long id = 2L;
         // Mock del servicio: cliente no existe
-        when(clienteService.deleteById(1L)).thenReturn(false);
+        when(clienteService.deleteById(id)).thenReturn(Optional.empty());
 
         // Petición DELETE y verificación de 404 Not Found
-        mockMvc.perform(delete("/api/clientes/1"))
+        mockMvc.perform(delete("/api/clientes/{id}", id))
                 .andExpect(status().isNotFound());
     }
 

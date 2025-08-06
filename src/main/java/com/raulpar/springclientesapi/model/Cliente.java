@@ -13,42 +13,42 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "pedidos")
-@Schema(description = "Entidad que representa a un cliente / Entity that represents a customer.")
+@Schema(description = "Entity that represents a customer.")
 public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idCliente")
-    @Schema(description = "Identificador único del cliente / Unique identifier of the customer.", example = "1")
+    @Schema(description = "Unique identifier of the customer.", example = "1")
     private Long idCliente;
 
     @NotBlank(message = "DNI obligatorio")
     @Column(name = "dni", unique = true, nullable = false)
-    @Schema(description = "DNI del cliente / National ID (DNI) of the customer.", example = "12345678Z")
+    @Schema(description = "National ID (DNI) of the customer.", example = "12345678Z")
     private String dni;
 
     @Column(name = "nombre")
-    @Schema(description = "Nombre del cliente / Customer's first name ", example = "Fernando")
+    @Schema(description = "Customer's first name ", example = "Fernando")
     private String nombre;
 
     @Column(name = "apellidos")
-    @Schema(description = "Apellido del cliente / Customer's last name ", example = "Fernandez")
+    @Schema(description = "Customer's last name ", example = "Fernandez")
     private String apellidos;
 
     @Column(name = "email")
-    @Schema(description = "Email del cliente / Customer's email address.", example = "Fernando123@gmail.com")
+    @Schema(description = "Customer's email address.", example = "Fernando123@gmail.com")
     private String email;
 
     @Column(name = "calle")
-    @Schema(description = "Calle del cliente / Customer's Address ", example = "Calle Barcelona")
+    @Schema(description = "Customer's Address ", example = "Calle Barcelona")
     private String calle;
 
     @Column(name = "municipio")
-    @Schema(description = "Municipio del cliente / Customer's city", example = "Madrid")
+    @Schema(description = "Customer's city", example = "Madrid")
     private String municipio;
 
     @Column(name = "provincia")
-    @Schema(description = "Provincia del cliente / Customer's Province.", example = "Madrid")
+    @Schema(description = "Customer's Province.", example = "Madrid")
     private String provincia;
 
     /**
