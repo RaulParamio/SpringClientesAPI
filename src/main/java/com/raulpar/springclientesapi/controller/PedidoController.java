@@ -22,19 +22,19 @@ public class PedidoController {
     private final PedidoService pedidoService;
 
 
-    @Operation(summary = "Obtener todos los pedidos / Get all orders")
+    @Operation(summary = "Get all orders")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pedidos encontrados / Orders found"),
+            @ApiResponse(responseCode = "200", description = "Orders found"),
     })
     @GetMapping
     public List<Pedido> getAll() {
         return pedidoService.findAll();
     }
 
-    @Operation(summary = "Obtener pedido por ID / Get order by ID")
+    @Operation(summary = "Get order by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pedido encontrado / Order found"),
-            @ApiResponse(responseCode = "404", description = "Pedido no encontrado / Order not found")
+            @ApiResponse(responseCode = "200", description = "Order found"),
+            @ApiResponse(responseCode = "404", description = "Order not found")
     })
     @GetMapping("/{id}")
     public ResponseEntity<Pedido> getById(@PathVariable Long id) {
@@ -43,9 +43,9 @@ public class PedidoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Crear pedido / Create a new order")
+    @Operation(summary = "Create a new order")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Pedido creado / Order created successfully")
+            @ApiResponse(responseCode = "201", description = "Order created successfully")
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -53,10 +53,10 @@ public class PedidoController {
         return pedidoService.save(pedido);
     }
 
-    @Operation(summary = "Borrar pedido por ID / Delete order by ID")
+    @Operation(summary = "Delete order by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pedido borrado / Order deleted"),
-            @ApiResponse(responseCode = "404", description = "Pedido no encontrado / Order not found")
+            @ApiResponse(responseCode = "200", description = "Order deleted"),
+            @ApiResponse(responseCode = "404", description = "Order not found")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -68,9 +68,9 @@ public class PedidoController {
         }
     }
 
-    @Operation(summary = "Obtener pedidos por fecha / Get orders by date")
+    @Operation(summary = "Get orders by date")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pedidos encontrados / Orders found"),
+            @ApiResponse(responseCode = "200", description = "Orders found"),
     })
     @GetMapping("/fecha")
     public ResponseEntity<List<Pedido>> getByFecha(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {

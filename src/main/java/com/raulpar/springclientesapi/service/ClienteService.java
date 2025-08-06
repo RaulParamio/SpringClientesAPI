@@ -72,11 +72,6 @@ public class ClienteService {
         return clienteMapper.toDetailDto(saved);
     }
 
-    public Cliente save(Cliente cliente) {
-        return clienteRepository.save(cliente);
-    }
-
-
     /**
      * Elimina un cliente si existe.
      *

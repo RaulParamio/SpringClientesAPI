@@ -1,6 +1,8 @@
 package com.raulpar.springclientesapi.integration.service;
 
-import com.raulpar.springclientesapi.model.Cliente;
+import com.raulpar.springclientesapi.dto.ClienteInputDto;
+import com.raulpar.springclientesapi.dto.ClienteOutputDetailDto;
+import com.raulpar.springclientesapi.dto.ClienteOutputDto;
 import com.raulpar.springclientesapi.repository.ClienteRepository;
 import com.raulpar.springclientesapi.service.ClienteService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +16,14 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Pruebas de integración para {@link ClienteService}.
+ * Verifica operaciones como guardar, buscar, eliminar y listar clientes.
+ */
 @ActiveProfiles("test")
 @SpringBootTest
 class ClienteServiceIntTest {
-/**
+
     @Autowired
     private ClienteService clienteService;
 
@@ -34,11 +40,11 @@ class ClienteServiceIntTest {
     @Test
     void testFindById() {
         //Creacion y guardado de cliente
-        Cliente cliente = new Cliente("12345678A", "Juan", "Pérez", "juan@example.com", "Calle Mendez", "Madrid", "Madrid");
-        Cliente guardado = clienteService.save(cliente);
+        ClienteInputDto cliente = new ClienteInputDto("12345678A", "Juan", "Pérez", "juan@example.com", "Calle Mendez", "Madrid", "Madrid");
+        ClienteOutputDetailDto guardado = clienteService.save(cliente);
 
         //Optional -> para evitar error NullPointerException , y usamos el metodo para probarlo.
-        Optional<Cliente> encontrado = clienteService.findById(guardado.getIdCliente());
+        Optional<ClienteOutputDetailDto> encontrado = clienteService.findById(guardado.getIdCliente());
 
         //Comprobamos que exista, y que se llame con el nombre del cliente que buscamos
         assertTrue(encontrado.isPresent());
@@ -48,10 +54,10 @@ class ClienteServiceIntTest {
     // Test que verifica si se puede encontrar un cliente por su DNI.
     @Test
     void testFindByDni() {
-        Cliente cliente = new Cliente("87654321B", "Lucía", "Gómez", "lucia12@egmail.com", "Avenida Arboleda", "Pamplona", "Navarra");
+        ClienteInputDto cliente = new ClienteInputDto("87654321B", "Lucía", "Gómez", "lucia12@egmail.com", "Avenida Arboleda", "Pamplona", "Navarra");
         clienteService.save(cliente);
 
-        Optional<Cliente> encontrado = clienteService.findByDni("87654321B");
+        Optional<ClienteOutputDetailDto> encontrado = clienteService.findByDni("87654321B");
 
         assertTrue(encontrado.isPresent());
         assertEquals("Lucía", encontrado.get().getNombre());
@@ -60,12 +66,12 @@ class ClienteServiceIntTest {
     // Test que comprueba que un cliente puede eliminarse correctamente por su ID.
     @Test
     void testDeleteById() {
-        Cliente cliente = new Cliente("99999999C", "Carlos", "Ruiz", "carlos11@gmail.com", "Calle Segovia", "Valencia", "Valencia");
-        Cliente guardado = clienteService.save(cliente);
+        ClienteInputDto cliente = new ClienteInputDto("99999999C", "Carlos", "Ruiz", "carlos11@gmail.com", "Calle Segovia", "Valencia", "Valencia");
+        ClienteOutputDetailDto guardado = clienteService.save(cliente);
 
         clienteService.deleteById(guardado.getIdCliente());
 
-        Optional<Cliente> encontrado = clienteService.findById(guardado.getIdCliente());
+        Optional<ClienteOutputDetailDto> encontrado = clienteService.findById(guardado.getIdCliente());
         assertFalse(encontrado.isPresent());
     }
 
@@ -73,18 +79,18 @@ class ClienteServiceIntTest {
     @Test
     void testFindAll() {
         // Crear y guardar varios clientes de prueba
-        Cliente cliente1 = new Cliente("11111111A", "Ana", "Lopez", "ana@gmail.com", "Calle 1", "Ciudad", "Provincia");
-        Cliente cliente2 = new Cliente("22222222B", "Luis", "Garcia", "luis@gmail.com", "Calle 2", "Ciudad", "Provincia");
+        ClienteInputDto cliente1 = new ClienteInputDto("11111111A", "Ana", "Lopez", "ana@gmail.com", "Calle 1", "Ciudad", "Provincia");
+        ClienteInputDto cliente2 = new ClienteInputDto("22222222B", "Luis", "Garcia", "luis@gmail.com", "Calle 2", "Ciudad", "Provincia");
         clienteService.save(cliente1);
         clienteService.save(cliente2);
 
         // Ejecutar el metodo findall
-        List<Cliente> clientes = clienteService.findAll();
+        List<ClienteOutputDto> clientes = clienteService.findAll();
 
         // Comprobar que devuelve los clientes guardados
         assertEquals(2, clientes.size());
         assertTrue(clientes.stream().anyMatch(c -> c.getDni().equals("11111111A")));
         assertTrue(clientes.stream().anyMatch(c -> c.getDni().equals("22222222B")));
     }
-**/
+
 }

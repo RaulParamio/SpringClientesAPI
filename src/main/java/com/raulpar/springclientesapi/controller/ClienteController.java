@@ -24,9 +24,9 @@ public class ClienteController {
     private final ClienteService clienteservice;
 
 
-    @Operation(summary = "Obtener todos los clientes / Get all customers")
+    @Operation(summary = "Get all customers")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de clientes obtenida correctamente / Customer list retrieved successfully")
+            @ApiResponse(responseCode = "200", description = "Customer list retrieved successfully")
     })
     @GetMapping
     public List<ClienteOutputDto> getAll() {
@@ -34,10 +34,10 @@ public class ClienteController {
     }
 
 
-    @Operation(summary = "Obtener cliente por ID / Get customer by ID")
+    @Operation(summary = "Get customer by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente encontrado / Customer found"),
-            @ApiResponse(responseCode = "404", description = "Cliente no encontrado / Customer not found")
+            @ApiResponse(responseCode = "200", description = "Customer found"),
+            @ApiResponse(responseCode = "404", description = "Customer not found")
     })
     @GetMapping("/{id}")
     public ResponseEntity<ClienteOutputDetailDto> getById(@PathVariable Long id) {
@@ -46,11 +46,11 @@ public class ClienteController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Actualizar cliente / Update customer")
+    @Operation(summary = "Update customer")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente actualizado correctamente / Customer updated successfully"),
-            @ApiResponse(responseCode = "404", description = "Cliente no encontrado / Customer not found"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida / Invalid request")
+            @ApiResponse(responseCode = "200", description = "Customer updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Customer not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     @PutMapping("/{id}")
     public ResponseEntity<ClienteOutputDetailDto> update(@PathVariable Long id, @RequestBody ClienteInputDto clienteDto) {
@@ -59,10 +59,10 @@ public class ClienteController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Guardar Cliente / Save customer")
+    @Operation(summary = "Save customer")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Cliente guardado correctamente / Customer saved succesfully"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida / Invalid request")
+            @ApiResponse(responseCode = "201", description = "Customer saved succesfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -71,10 +71,10 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
         }
 
-    @Operation(summary = "Borrar Cliente por ID / Delete customer by ID")
+    @Operation(summary = "Delete customer by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente borrado correctamente / Customer deleted succesfully"),
-            @ApiResponse(responseCode = "404", description = "Cliente no encontrado / Customer not found")
+            @ApiResponse(responseCode = "200", description = "Customer deleted succesfully"),
+            @ApiResponse(responseCode = "404", description = "Customer not found")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<ClienteOutputDetailDto> delete(@PathVariable Long id) {
@@ -84,10 +84,10 @@ public class ClienteController {
     }
 
 
-    @Operation(summary = "Obtener Cliente por DNI / Get customer by DNI (National ID)")
+    @Operation(summary = "Get customer by DNI (National ID)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente encontrado correctamente / Customer found succesfully"),
-            @ApiResponse(responseCode = "404", description = "Cliente no encontrado / Customer not found")
+            @ApiResponse(responseCode = "200", description = "Customer found succesfully"),
+            @ApiResponse(responseCode = "404", description = "Customer not found")
     })
     @GetMapping("/dni/{dni}")
     public ResponseEntity<ClienteOutputDetailDto> getByDni(@PathVariable String dni) {
