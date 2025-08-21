@@ -3,8 +3,8 @@ package com.raulpar.springclientesapi.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raulpar.springclientesapi.controller.PedidoController;
+import com.raulpar.springclientesapi.dto.PedidoDto;
 import com.raulpar.springclientesapi.model.Cliente;
-import com.raulpar.springclientesapi.model.Pedido;
 import com.raulpar.springclientesapi.service.PedidoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -70,8 +69,8 @@ class PedidoControllerWebTest {
     // Test que comprueba que se devuelve correctamente una lista con todos los pedidos
     @Test
     void testGetAll() throws Exception {
-        Pedido p1 = new Pedido(cliente);
-        Pedido p2 = new Pedido(cliente);
+        PedidoDto p1 = new PedidoDto();
+        PedidoDto p2 = new PedidoDto();
 
         Mockito.when(pedidoService.findAll()).thenReturn(Arrays.asList(p1, p2));
 
@@ -83,7 +82,7 @@ class PedidoControllerWebTest {
     // Test que comprueba la obtención de un pedido existente por ID
     @Test
     void testGetByIdFound() throws Exception {
-        Pedido pedido = new Pedido(cliente);
+        PedidoDto pedido = new PedidoDto();
         pedido.setNumPedido(1L);
 
         Mockito.when(pedidoService.findById(1L)).thenReturn(Optional.of(pedido));
@@ -105,16 +104,17 @@ class PedidoControllerWebTest {
     // Test que simula la creación de un pedido vía POST y comprueba la respuesta
     @Test
     void testCreatePedido() throws Exception {
-        Pedido pedido = new Pedido(cliente);
-        pedido.setFecha(LocalDateTime.now());
+        PedidoDto pedido = new PedidoDto();
+        pedido.setClienteId(18L);
 
-        Mockito.when(pedidoService.save(any(Pedido.class))).thenReturn(pedido);
+        // Mock del servicio
+        Mockito.when(pedidoService.save(any(PedidoDto.class))).thenReturn(pedido);
 
         mockMvc.perform(post("/api/pedido")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(pedido)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.cliente.dni", is("12345678A")));
+                .andExpect(jsonPath("$.clienteId", is(18)));
     }
 
     // Test que verifica la eliminación exitosa de un pedido existente
@@ -139,10 +139,9 @@ class PedidoControllerWebTest {
     @Test
     void testGetByFecha() throws Exception {
         LocalDate fecha = LocalDate.now();
-        Pedido pedido = new Pedido(cliente);
-        pedido.setFecha(fecha.atStartOfDay());
+        PedidoDto pedidoDto = new PedidoDto();
 
-        List<Pedido> lista = List.of(pedido);
+        List<PedidoDto> lista = List.of(pedidoDto);
 
         Mockito.when(pedidoService.findByFecha(fecha)).thenReturn(lista);
 

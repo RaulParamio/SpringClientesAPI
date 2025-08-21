@@ -53,8 +53,7 @@ class ClienteServiceUnitTest {
 
         // Cuando se llama al metodo findAll del repositorio, devolvemos los datos simulados
         when(clienteRepository.findAll()).thenReturn(clientesMock);
-        when(clienteMapper.toDto(clientesMock.get(0))).thenReturn(dto1);
-        when(clienteMapper.toDto(clientesMock.get(1))).thenReturn(dto2);
+        when(clienteMapper.toOutputList(clientesMock)).thenReturn(Arrays.asList(dto1, dto2));
 
         // Ejecutamos el metodo real del servicio
         List<ClienteOutputDto> clientes = clienteService.findAll();
@@ -62,8 +61,7 @@ class ClienteServiceUnitTest {
         //Comprobacion del resultado
         assertEquals(2, clientes.size());
         assertEquals("Juan", clientes.get(0).getNombre());
-        verify(clienteMapper, times(1)).toDto(clientesMock.get(0));
-        verify(clienteMapper, times(1)).toDto(clientesMock.get(1));
+        verify(clienteMapper, times(1)).toOutputList(clientesMock);
     }
 
     // Test que comprueba que findById devuelve el cliente correcto

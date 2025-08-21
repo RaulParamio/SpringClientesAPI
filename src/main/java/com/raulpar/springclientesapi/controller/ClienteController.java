@@ -67,9 +67,9 @@ public class ClienteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ClienteOutputDetailDto> create(@Valid @RequestBody ClienteInputDto clienteinputdto) {
-            ClienteOutputDetailDto cliente = clienteservice.save(clienteinputdto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
-        }
+        ClienteOutputDetailDto cliente = clienteservice.save(clienteinputdto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
+    }
 
     @Operation(summary = "Delete customer by ID")
     @ApiResponses(value = {

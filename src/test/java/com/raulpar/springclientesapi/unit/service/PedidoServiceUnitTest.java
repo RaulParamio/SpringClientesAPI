@@ -1,6 +1,10 @@
 package com.raulpar.springclientesapi.unit.service;
 
+import com.raulpar.springclientesapi.dto.PedidoDto;
+import com.raulpar.springclientesapi.mapper.PedidoMapper;
+import com.raulpar.springclientesapi.model.Cliente;
 import com.raulpar.springclientesapi.model.Pedido;
+import com.raulpar.springclientesapi.repository.ClienteRepository;
 import com.raulpar.springclientesapi.repository.PedidoRepository;
 import com.raulpar.springclientesapi.service.PedidoService;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +27,12 @@ class PedidoServiceUnitTest {
     @Mock
     private PedidoRepository pedidoRepository;
 
+    @Mock
+    private ClienteRepository clienteRepository;
+
+    @Mock
+    private PedidoMapper pedidoMapper;
+
     // Crea una instancia real de PedidoService e inyecta el mock de pedidoRepository
     @InjectMocks
     private PedidoService pedidoService;
@@ -37,12 +47,15 @@ class PedidoServiceUnitTest {
     @Test
     void testFindAll() {
         List<Pedido> pedidosMock = Arrays.asList(new Pedido(), new Pedido());
+        List<PedidoDto> pedidosDto = Arrays.asList(new PedidoDto(), new PedidoDto());
         when(pedidoRepository.findAll()).thenReturn(pedidosMock);
+        when(pedidoMapper.toDtoList(pedidosMock)).thenReturn(pedidosDto);
 
-        List<Pedido> pedidos = pedidoService.findAll();
+        List<PedidoDto> pedidos = pedidoService.findAll();
 
         assertEquals(2, pedidos.size());
         verify(pedidoRepository, times(1)).findAll();
+        verify(pedidoMapper, times(1)).toDtoList(pedidosMock);
     }
 
     // Test que verifica el comportamiento al buscar un pedido por su ID
@@ -50,25 +63,52 @@ class PedidoServiceUnitTest {
     void testFindById() {
         Pedido pedido = new Pedido();
         pedido.setNumPedido(1L);
-        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+        PedidoDto pedidoDto = new PedidoDto();
+        pedidoDto.setNumPedido(1L);
 
-        Optional<Pedido> resultado = pedidoService.findById(1L);
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+        when(pedidoMapper.toDto(pedido)).thenReturn(pedidoDto);
+
+        Optional<PedidoDto> resultado = pedidoService.findById(1L);
 
         assertTrue(resultado.isPresent());
         assertEquals(1L, resultado.get().getNumPedido());
         verify(pedidoRepository, times(1)).findById(1L);
+        verify(pedidoMapper, times(1)).toDto(pedido);
     }
 
     // Test para comprobar que el metodo save funciona correctamente
     @Test
     void testSave() {
-        Pedido pedido = new Pedido();
-        when(pedidoRepository.save(pedido)).thenReturn(pedido);
+        PedidoDto pedidoDto = new PedidoDto();
+        pedidoDto.setClienteId(18L);
 
-        Pedido guardado = pedidoService.save(pedido);
+        Cliente cliente = new Cliente();
+        cliente.setIdCliente(18L);
+
+        Pedido pedidoEntity = new Pedido();
+        pedidoEntity.setNumPedido(1L);
+
+        PedidoDto savedDto = new PedidoDto();
+        savedDto.setNumPedido(1L);
+
+        // Mock: devolver el cliente cuando se busca por ID
+        when(clienteRepository.findById(18L)).thenReturn(Optional.of(cliente));
+
+
+        // Mock: cuando el repositorio guarda, devuelve la entidad
+        when(pedidoMapper.toEntity(pedidoDto)).thenReturn(pedidoEntity);
+        when(pedidoRepository.save(pedidoEntity)).thenReturn(pedidoEntity);
+        when(pedidoMapper.toDto(pedidoEntity)).thenReturn(savedDto);
+
+        // Llamar al servicio (que convierte DTO → entidad)
+        PedidoDto guardado = pedidoService.save(pedidoDto);
 
         assertNotNull(guardado);
-        verify(pedidoRepository, times(1)).save(pedido);
+        assertEquals(1L, guardado.getNumPedido());
+        verify(pedidoMapper, times(1)).toEntity(pedidoDto);
+        verify(pedidoRepository, times(1)).save(pedidoEntity);
+        verify(pedidoMapper, times(1)).toDto(pedidoEntity);
     }
 
     // Test para verificar que deleteById elimina un pedido si existe
@@ -102,13 +142,17 @@ class PedidoServiceUnitTest {
         LocalDate fecha = LocalDate.of(2025, 4, 19);
         LocalDateTime desde = fecha.atStartOfDay();
         LocalDateTime hasta = fecha.atTime(LocalTime.MAX);
+
         List<Pedido> pedidosMock = Arrays.asList(new Pedido(), new Pedido());
+        List<PedidoDto> dtoMock = Arrays.asList(new PedidoDto(), new PedidoDto());
 
         when(pedidoRepository.findByFechaBetween(desde, hasta)).thenReturn(pedidosMock);
+        when(pedidoMapper.toDtoList(pedidosMock)).thenReturn(dtoMock);
 
-        List<Pedido> resultado = pedidoService.findByFecha(fecha);
+        List<PedidoDto> resultado = pedidoService.findByFecha(fecha);
 
         assertEquals(2, resultado.size());
         verify(pedidoRepository, times(1)).findByFechaBetween(desde, hasta);
+        verify(pedidoMapper, times(1)).toDtoList(pedidosMock);
     }
 }

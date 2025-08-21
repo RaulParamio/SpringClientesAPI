@@ -1,7 +1,7 @@
 package com.raulpar.springclientesapi.integration.service;
 
+import com.raulpar.springclientesapi.dto.PedidoDto;
 import com.raulpar.springclientesapi.model.Cliente;
-import com.raulpar.springclientesapi.model.Pedido;
 import com.raulpar.springclientesapi.repository.ClienteRepository;
 import com.raulpar.springclientesapi.repository.PedidoRepository;
 import com.raulpar.springclientesapi.service.PedidoService;
@@ -29,7 +29,6 @@ class PedidoServiceIntTest {
 
     @Autowired
     private ClienteRepository clienteRepository;
-
     private Cliente cliente;
 
     //Borrado antes de cada test para que no se afecten entre ellos
@@ -41,17 +40,18 @@ class PedidoServiceIntTest {
         // Crear cliente por defecto para usar en todos los tests
         cliente = new Cliente("12345678A", "Juan", "Pérez", "juan@example.com", "Calle Falsa", "Madrid", "Madrid");
         cliente = clienteRepository.save(cliente);
+
     }
 
     // Test que guarda un pedido y lo busca por su ID para verificar que fue correctamente persistido.
     @Test
     void testSaveAndFindById() {
-        Pedido pedido = new Pedido(cliente);
-        pedido.setFecha(LocalDate.now().atStartOfDay());
+        PedidoDto pedidoDto = new PedidoDto();
+        pedidoDto.setClienteId(cliente.getIdCliente());
 
-        Pedido saved = pedidoService.save(pedido);
+        PedidoDto saved = pedidoService.save(pedidoDto);
 
-        Optional<Pedido> result = pedidoService.findById(saved.getNumPedido());
+        Optional<PedidoDto> result = pedidoService.findById(saved.getNumPedido());
         assertTrue(result.isPresent());
         assertEquals(saved.getNumPedido(), result.get().getNumPedido());
     }
@@ -59,30 +59,31 @@ class PedidoServiceIntTest {
     // Test que guarda dos pedidos y comprueba que el metodo findAll devuelve esos dos pedidos.
     @Test
     void testFindAll() {
-        Pedido p1 = new Pedido(cliente);
-        Pedido p2 = new Pedido(cliente);
-        p1.setFecha(LocalDate.now().atStartOfDay());
-        p2.setFecha(LocalDate.now().atStartOfDay());
+        PedidoDto p1 = new PedidoDto();
+        p1.setClienteId(cliente.getIdCliente());
+
+        PedidoDto p2 = new PedidoDto();
+        p2.setClienteId(cliente.getIdCliente());
 
         pedidoService.save(p1);
         pedidoService.save(p2);
 
-        List<Pedido> pedidos = pedidoService.findAll();
+        List<PedidoDto> pedidos = pedidoService.findAll();
         assertEquals(2, pedidos.size());
     }
 
     // Test que comprueba que un pedido puede eliminarse correctamente por su ID.
     @Test
     void testDeleteById() {
-        Pedido pedido = new Pedido(cliente);
-        pedido.setFecha(LocalDate.now().atStartOfDay());
+        PedidoDto pedidoDto = new PedidoDto();
+        pedidoDto.setClienteId(cliente.getIdCliente());
 
-        Pedido saved = pedidoService.save(pedido);
+        PedidoDto saved = pedidoService.save(pedidoDto);
 
         boolean deleted = pedidoService.deleteById(saved.getNumPedido());
         assertTrue(deleted);
 
-        Optional<Pedido> result = pedidoService.findById(saved.getNumPedido());
+        Optional<PedidoDto> result = pedidoService.findById(saved.getNumPedido());
         assertFalse(result.isPresent());
     }
 
@@ -91,12 +92,12 @@ class PedidoServiceIntTest {
     void testFindByFecha() {
         LocalDate fecha = LocalDate.now();
 
-        // Crear pedido con la fecha buscada
-        Pedido pedido = new Pedido(cliente);
-        pedidoService.save(pedido);
+        PedidoDto pedidoDto = new PedidoDto();
+        pedidoDto.setClienteId(cliente.getIdCliente());
+        pedidoService.save(pedidoDto);
 
         // Ejecutar búsqueda
-        List<Pedido> resultados = pedidoService.findByFecha(fecha);
+        List<PedidoDto> resultados = pedidoService.findByFecha(fecha);
         resultados.forEach(p -> System.out.println("Pedido: " + p.getFecha()));
         // Verificar que el pedido fue encontrado
         assertEquals(1, resultados.size());
@@ -107,7 +108,7 @@ class PedidoServiceIntTest {
     void testFindByFechaNoResults() {
         LocalDate fecha = LocalDate.of(2025, 4, 19);
 
-        List<Pedido> resultados = pedidoService.findByFecha(fecha);
+        List<PedidoDto> resultados = pedidoService.findByFecha(fecha);
         assertTrue(resultados.isEmpty());
     }
 }

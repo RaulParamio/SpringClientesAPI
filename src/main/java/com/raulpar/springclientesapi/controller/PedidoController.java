@@ -1,6 +1,6 @@
 package com.raulpar.springclientesapi.controller;
 
-import com.raulpar.springclientesapi.model.Pedido;
+import com.raulpar.springclientesapi.dto.PedidoDto;
 import com.raulpar.springclientesapi.service.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,7 +27,7 @@ public class PedidoController {
             @ApiResponse(responseCode = "200", description = "Orders found"),
     })
     @GetMapping
-    public List<Pedido> getAll() {
+    public List<PedidoDto> getAll() {
         return pedidoService.findAll();
     }
 
@@ -37,11 +37,12 @@ public class PedidoController {
             @ApiResponse(responseCode = "404", description = "Order not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Pedido> getById(@PathVariable Long id) {
+    public ResponseEntity<PedidoDto> getById(@PathVariable Long id) {
         return pedidoService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
 
     @Operation(summary = "Create a new order")
     @ApiResponses(value = {
@@ -49,9 +50,10 @@ public class PedidoController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Pedido create(@RequestBody Pedido pedido) {
-        return pedidoService.save(pedido);
+    public PedidoDto create(@RequestBody PedidoDto pedidoDto) {
+        return pedidoService.save(pedidoDto);
     }
+
 
     @Operation(summary = "Delete order by ID")
     @ApiResponses(value = {
@@ -73,8 +75,8 @@ public class PedidoController {
             @ApiResponse(responseCode = "200", description = "Orders found"),
     })
     @GetMapping("/fecha")
-    public ResponseEntity<List<Pedido>> getByFecha(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
-        List<Pedido> pedidos = pedidoService.findByFecha(fecha);
+    public ResponseEntity<List<PedidoDto>> getByFecha(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+        List<PedidoDto> pedidos = pedidoService.findByFecha(fecha);
         return ResponseEntity.ok(pedidos);
     }
 
