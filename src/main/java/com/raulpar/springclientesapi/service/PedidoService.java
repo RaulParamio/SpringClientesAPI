@@ -1,6 +1,10 @@
 package com.raulpar.springclientesapi.service;
 
+import com.raulpar.springclientesapi.dto.PedidoDto;
+import com.raulpar.springclientesapi.mapper.PedidoMapper;
+import com.raulpar.springclientesapi.model.Cliente;
 import com.raulpar.springclientesapi.model.Pedido;
+import com.raulpar.springclientesapi.repository.ClienteRepository;
 import com.raulpar.springclientesapi.repository.PedidoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,13 +21,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class PedidoService {
+
     private final PedidoRepository pedidoRepository;
+    private final PedidoMapper pedidoMapper;
+    private final ClienteRepository clienteRepository;
 
     /**
      * Recupera todos los pedidos almacenados.
      */
-    public List<Pedido> findAll() {
-        return pedidoRepository.findAll();
+    public List<PedidoDto> findAll() {
+        List<Pedido> pedidos = pedidoRepository.findAll();
+        return pedidoMapper.toDtoList(pedidos);
     }
 
     /**
@@ -32,18 +40,26 @@ public class PedidoService {
      * @param id Identificador del pedido
      * @return Pedido encontrado, si existe
      */
-    public Optional<Pedido> findById(Long id) {
-        return pedidoRepository.findById(id);
+    public Optional<PedidoDto> findById(Long id) {
+        return pedidoRepository.findById(id)
+                .map(pedidoMapper::toDto);
     }
 
     /**
      * Guarda un nuevo pedido o actualiza uno existente.
      *
-     * @param pedido Pedido a guardar
+     * @param pedidoDto Pedido a guardar
      * @return Pedido guardado
      */
-    public Pedido save(Pedido pedido) {
-        return pedidoRepository.save(pedido);
+    public PedidoDto save(PedidoDto pedidoDto) {
+        Pedido pedido = pedidoMapper.toEntity(pedidoDto);
+
+        Cliente cliente = clienteRepository.findById(pedidoDto.getClienteId())
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
+        pedido.setCliente(cliente);
+
+        Pedido pedidosaved = pedidoRepository.save(pedido);
+        return pedidoMapper.toDto(pedidosaved);
     }
 
     /**
@@ -71,10 +87,12 @@ public class PedidoService {
      * @param fecha Día por el que se filtrarán los pedidos (sin hora).
      * @return Lista de pedidos realizados en esa fecha.
      */
-    public List<Pedido> findByFecha(LocalDate fecha) {
+    public List<PedidoDto> findByFecha(LocalDate fecha) {
         LocalDateTime desde = fecha.atStartOfDay(); // 2025-04-19T00:00:00
         LocalDateTime hasta = fecha.atTime(LocalTime.MAX); // 2025-04-19T23:59:59.999999999
-        return pedidoRepository.findByFechaBetween(desde, hasta);
+        List<Pedido> pedido =  pedidoRepository.findByFechaBetween(desde, hasta);
+        return pedidoMapper.toDtoList(pedido);
     }
+
 }
 
