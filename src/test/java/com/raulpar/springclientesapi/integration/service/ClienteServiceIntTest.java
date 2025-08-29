@@ -24,11 +24,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class ClienteServiceIntTest {
 
-    @Autowired
-    private ClienteService clienteService;
+    private final ClienteService clienteService;
+    private final ClienteRepository clienteRepository;
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    public ClienteServiceIntTest(ClienteService clienteService, ClienteRepository clienteRepository) {
+        this.clienteService = clienteService;
+        this.clienteRepository = clienteRepository;
+    }
 
     //Borrado antes de cada test para que no se afecten entre ellos
     @BeforeEach

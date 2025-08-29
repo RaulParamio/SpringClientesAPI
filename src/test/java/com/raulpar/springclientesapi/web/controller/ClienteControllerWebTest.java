@@ -6,18 +6,16 @@ import com.raulpar.springclientesapi.dto.ClienteOutputDto;
 import com.raulpar.springclientesapi.mapper.ClienteMapper;
 import com.raulpar.springclientesapi.service.ClienteService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -25,29 +23,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 // Test unitario aislado para ClienteController utilizando MockMvc
 @WebMvcTest(ClienteController.class)
-// Se carga una configuración de prueba con un bean mockeado de ClienteService
-@ContextConfiguration(classes = {ClienteController.class, ClienteControllerWebTest.TestConfig.class})
 class ClienteControllerWebTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
+    @MockitoBean
     private ClienteService clienteService;
 
-    // Configuración de Spring para registrar un mock de ClienteService
-    @Configuration
-    static class TestConfig {
-        @Bean
-        public ClienteService clienteService() {
-            return Mockito.mock(ClienteService.class);
-        }
-
-        @Bean
-        public ClienteMapper clienteMapper() {
-            return Mockito.mock(ClienteMapper.class);
-        }
-    }
+    @MockitoBean
+    private ClienteMapper clienteMapper;
 
     @Test
     void testGetAll() throws Exception {
@@ -112,6 +97,8 @@ class ClienteControllerWebTest {
         // Petición DELETE y verificación de 404 Not Found
         mockMvc.perform(delete("/api/clientes/{id}", id))
                 .andExpect(status().isNotFound());
+
+        verify(clienteService).deleteById(id);
     }
 
 }

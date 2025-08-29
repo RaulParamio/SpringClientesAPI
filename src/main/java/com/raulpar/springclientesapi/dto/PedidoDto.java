@@ -11,16 +11,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Schema(description = "Order's DTO")
+@Schema(description = "Order DTO")
 public class PedidoDto {
 
-    @Schema(description = "Order's Unique identifier", example = "1")
+    @Schema(description = "Order Unique identifier", example = "1")
     private Long numPedido;
 
-    @Schema(description = "Customer's Unique identifier", example = "1")
-    private Long clienteId;
+    @Schema(description = "Customer Unique identifier", example = "1")
+    private Long idCliente;
 
-    @Schema(description = "Order's Date.", example = "2025-04-19")
+    @Schema(description = "Order Date.", example = "2025-04-19")
     private LocalDateTime fecha;
 
 }

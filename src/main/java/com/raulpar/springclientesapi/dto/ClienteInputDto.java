@@ -10,35 +10,35 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Schema(description = "DTO para actualizar un cliente")
+@Schema(description = "DTO to save a customer")
 public class ClienteInputDto {
 
     @NotBlank
-    @Schema(description = "DNI del cliente", example = "12345678Z")
+    @Schema(description = "Customer DNI (National ID number)", example = "12345678Z")
     private String dni;
 
     @NotBlank
-    @Schema(description = "Nombre del cliente", example = "Juan")
+    @Schema(description = "Customer name", example = "Juan")
     private String nombre;
 
     @NotBlank
-    @Schema(description = "Apellidos del cliente", example = "Pérez")
+    @Schema(description = "Customer last name", example = "Pérez")
     private String apellidos;
 
     @NotBlank
     @Email
-    @Schema(description = "Correo electrónico", example = "juan@gmail.com")
+    @Schema(description = "Email Address", example = "juan@gmail.com")
     private String email;
 
     @NotBlank
-    @Schema(description = "Calle", example = "Calle Malaga 10")
+    @Schema(description = "Street Address", example = "Calle Malaga 10")
     private String calle;
 
     @NotBlank
-    @Schema(description = "Municipio", example = "Madrid")
+    @Schema(description = "City", example = "Madrid")
     private String municipio;
 
     @NotBlank
-    @Schema(description = "Provincia", example = "Madrid")
+    @Schema(description = "Province / State", example = "Madrid")
     private String provincia;
 }

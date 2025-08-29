@@ -3,19 +3,15 @@ package com.raulpar.springclientesapi.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raulpar.springclientesapi.controller.PedidoController;
+import com.raulpar.springclientesapi.dto.PedidoCreateDto;
 import com.raulpar.springclientesapi.dto.PedidoDto;
-import com.raulpar.springclientesapi.model.Cliente;
 import com.raulpar.springclientesapi.service.PedidoService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -31,40 +27,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 // Test unitario aislado para PedidoController utilizando MockMvc
 @WebMvcTest(PedidoController.class)
-// Se carga una configuración de prueba personalizada con un bean mockeado de PedidoService
-@ContextConfiguration(classes = {PedidoController.class, PedidoControllerWebTest.TestConfig.class})
 class PedidoControllerWebTest {
 
-    // Inyección del objeto MockMvc para realizar llamadas HTTP simuladas al controlador
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private PedidoService pedidoService;
-
-    // Utilizado para convertir objetos Java a JSON
-    @Autowired
     private ObjectMapper objectMapper;
 
-    // Se ejecuta antes de cada test para inicializar los mocks
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+    @MockitoBean
+    private PedidoService pedidoService;
 
-    // Clase de configuración interna para registrar el mock de PedidoService como bean
-    @Configuration
-    static class TestConfig {
-        @Bean
-        public PedidoService pedidoService() {
-            return org.mockito.Mockito.mock(PedidoService.class);
-        }
-    }
-
-    // Cliente de prueba usado para construir pedidos ficticios
-    private final Cliente cliente = new Cliente(
-            "12345678A", "Juan", "Pérez", "juan@gmail.com", "Calle 1", "Madrid", "Madrid"
-    );
 
     // Test que comprueba que se devuelve correctamente una lista con todos los pedidos
     @Test
@@ -104,17 +77,20 @@ class PedidoControllerWebTest {
     // Test que simula la creación de un pedido vía POST y comprueba la respuesta
     @Test
     void testCreatePedido() throws Exception {
-        PedidoDto pedido = new PedidoDto();
-        pedido.setClienteId(18L);
 
+        PedidoCreateDto pedido = new PedidoCreateDto();
+        pedido.setIdCliente(18L);
+
+        PedidoDto pedidoResponse = new PedidoDto();
+        pedidoResponse.setIdCliente(18L);
         // Mock del servicio
-        Mockito.when(pedidoService.save(any(PedidoDto.class))).thenReturn(pedido);
+        Mockito.when(pedidoService.save(any(PedidoCreateDto.class))).thenReturn(pedidoResponse);
 
         mockMvc.perform(post("/api/pedido")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(pedido)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.clienteId", is(18)));
+                .andExpect(jsonPath("$.idCliente", is(18)));
     }
 
     // Test que verifica la eliminación exitosa de un pedido existente

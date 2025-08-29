@@ -1,5 +1,6 @@
 package com.raulpar.springclientesapi.unit.service;
 
+import com.raulpar.springclientesapi.dto.PedidoCreateDto;
 import com.raulpar.springclientesapi.dto.PedidoDto;
 import com.raulpar.springclientesapi.mapper.PedidoMapper;
 import com.raulpar.springclientesapi.model.Cliente;
@@ -8,6 +9,7 @@ import com.raulpar.springclientesapi.repository.ClienteRepository;
 import com.raulpar.springclientesapi.repository.PedidoRepository;
 import com.raulpar.springclientesapi.service.PedidoService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -33,6 +35,8 @@ class PedidoServiceUnitTest {
     @Mock
     private PedidoMapper pedidoMapper;
 
+    private AutoCloseable mocks;
+
     // Crea una instancia real de PedidoService e inyecta el mock de pedidoRepository
     @InjectMocks
     private PedidoService pedidoService;
@@ -40,7 +44,12 @@ class PedidoServiceUnitTest {
     // Inicializa los mocks antes de cada test
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+           mocks = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        mocks.close();
     }
 
     // Test que verifica que findAll devuelve una lista de 2 pedidos
@@ -80,8 +89,8 @@ class PedidoServiceUnitTest {
     // Test para comprobar que el metodo save funciona correctamente
     @Test
     void testSave() {
-        PedidoDto pedidoDto = new PedidoDto();
-        pedidoDto.setClienteId(18L);
+        PedidoCreateDto pedidoCreateDto = new PedidoCreateDto();
+        pedidoCreateDto.setIdCliente(18L);
 
         Cliente cliente = new Cliente();
         cliente.setIdCliente(18L);
@@ -97,16 +106,16 @@ class PedidoServiceUnitTest {
 
 
         // Mock: cuando el repositorio guarda, devuelve la entidad
-        when(pedidoMapper.toEntity(pedidoDto)).thenReturn(pedidoEntity);
-        when(pedidoRepository.save(pedidoEntity)).thenReturn(pedidoEntity);
+        when(pedidoMapper.toEntity(pedidoCreateDto)).thenReturn(pedidoEntity);
+        when(pedidoRepository.save(any(Pedido.class))).thenReturn(pedidoEntity);
         when(pedidoMapper.toDto(pedidoEntity)).thenReturn(savedDto);
 
         // Llamar al servicio (que convierte DTO → entidad)
-        PedidoDto guardado = pedidoService.save(pedidoDto);
+        PedidoDto guardado = pedidoService.save(pedidoCreateDto);
 
         assertNotNull(guardado);
         assertEquals(1L, guardado.getNumPedido());
-        verify(pedidoMapper, times(1)).toEntity(pedidoDto);
+        verify(pedidoMapper, times(1)).toEntity(pedidoCreateDto);
         verify(pedidoRepository, times(1)).save(pedidoEntity);
         verify(pedidoMapper, times(1)).toDto(pedidoEntity);
     }
@@ -114,6 +123,7 @@ class PedidoServiceUnitTest {
     // Test para verificar que deleteById elimina un pedido si existe
     @Test
     void testDeleteById_Exists() {
+
         when(pedidoRepository.existsById(1L)).thenReturn(true);
         doNothing().when(pedidoRepository).deleteById(1L);
 

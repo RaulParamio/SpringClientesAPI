@@ -7,6 +7,7 @@ import com.raulpar.springclientesapi.mapper.ClienteMapper;
 import com.raulpar.springclientesapi.model.Cliente;
 import com.raulpar.springclientesapi.repository.ClienteRepository;
 import com.raulpar.springclientesapi.service.ClienteService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -29,6 +30,8 @@ class ClienteServiceUnitTest {
     @Mock
     private ClienteMapper clienteMapper;
 
+    private AutoCloseable mocks;
+
     // Crea una instancia real del servicio e inyecta el mock anterior
     @InjectMocks
     private ClienteService clienteService;
@@ -36,7 +39,12 @@ class ClienteServiceUnitTest {
     // Inicializa los mocks antes de cada prueba
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        mocks = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        mocks.close();
     }
 
     // Test que comprueba que findAll devuelve la lista esperada
