@@ -1,5 +1,6 @@
 package com.raulpar.springclientesapi.integration.service;
 
+import com.raulpar.springclientesapi.dto.PedidoCreateDto;
 import com.raulpar.springclientesapi.dto.PedidoDto;
 import com.raulpar.springclientesapi.model.Cliente;
 import com.raulpar.springclientesapi.repository.ClienteRepository;
@@ -21,15 +22,18 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 class PedidoServiceIntTest {
 
-    @Autowired
-    private PedidoService pedidoService;
-
-    @Autowired
-    private PedidoRepository pedidoRepository;
-
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final PedidoService pedidoService;
+    private final PedidoRepository pedidoRepository;
+    private final ClienteRepository clienteRepository;
     private Cliente cliente;
+
+    @Autowired
+    public PedidoServiceIntTest(PedidoService pedidoService, PedidoRepository pedidoRepository,ClienteRepository clienteRepository){
+        this.pedidoService = pedidoService;
+        this.pedidoRepository = pedidoRepository;
+        this.clienteRepository = clienteRepository;
+
+    }
 
     //Borrado antes de cada test para que no se afecten entre ellos
     @BeforeEach
@@ -46,10 +50,10 @@ class PedidoServiceIntTest {
     // Test que guarda un pedido y lo busca por su ID para verificar que fue correctamente persistido.
     @Test
     void testSaveAndFindById() {
-        PedidoDto pedidoDto = new PedidoDto();
-        pedidoDto.setClienteId(cliente.getIdCliente());
+        PedidoCreateDto pedidoCreateDto = new PedidoCreateDto();
+        pedidoCreateDto.setIdCliente(cliente.getIdCliente());
 
-        PedidoDto saved = pedidoService.save(pedidoDto);
+        PedidoDto saved = pedidoService.save(pedidoCreateDto);
 
         Optional<PedidoDto> result = pedidoService.findById(saved.getNumPedido());
         assertTrue(result.isPresent());
@@ -59,14 +63,14 @@ class PedidoServiceIntTest {
     // Test que guarda dos pedidos y comprueba que el metodo findAll devuelve esos dos pedidos.
     @Test
     void testFindAll() {
-        PedidoDto p1 = new PedidoDto();
-        p1.setClienteId(cliente.getIdCliente());
+        PedidoCreateDto pedido1 = new PedidoCreateDto();
+        pedido1.setIdCliente(cliente.getIdCliente());
 
-        PedidoDto p2 = new PedidoDto();
-        p2.setClienteId(cliente.getIdCliente());
+        PedidoCreateDto pedido2 = new PedidoCreateDto();
+        pedido2.setIdCliente(cliente.getIdCliente());
 
-        pedidoService.save(p1);
-        pedidoService.save(p2);
+        pedidoService.save(pedido1);
+        pedidoService.save(pedido2);
 
         List<PedidoDto> pedidos = pedidoService.findAll();
         assertEquals(2, pedidos.size());
@@ -75,10 +79,10 @@ class PedidoServiceIntTest {
     // Test que comprueba que un pedido puede eliminarse correctamente por su ID.
     @Test
     void testDeleteById() {
-        PedidoDto pedidoDto = new PedidoDto();
-        pedidoDto.setClienteId(cliente.getIdCliente());
+        PedidoCreateDto pedidoCreateDto = new PedidoCreateDto();
+        pedidoCreateDto.setIdCliente(cliente.getIdCliente());
 
-        PedidoDto saved = pedidoService.save(pedidoDto);
+        PedidoDto saved = pedidoService.save(pedidoCreateDto);
 
         boolean deleted = pedidoService.deleteById(saved.getNumPedido());
         assertTrue(deleted);
@@ -92,9 +96,9 @@ class PedidoServiceIntTest {
     void testFindByFecha() {
         LocalDate fecha = LocalDate.now();
 
-        PedidoDto pedidoDto = new PedidoDto();
-        pedidoDto.setClienteId(cliente.getIdCliente());
-        pedidoService.save(pedidoDto);
+        PedidoCreateDto pedidoCreateDto = new PedidoCreateDto();
+        pedidoCreateDto.setIdCliente(cliente.getIdCliente());
+        pedidoService.save(pedidoCreateDto);
 
         // Ejecutar búsqueda
         List<PedidoDto> resultados = pedidoService.findByFecha(fecha);

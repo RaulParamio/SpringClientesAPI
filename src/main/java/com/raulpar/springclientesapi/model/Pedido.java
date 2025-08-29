@@ -21,7 +21,7 @@ public class Pedido {
     private Long numPedido;
 
     @ManyToOne
-    @JoinColumn(name = "idCliente", nullable = false)
+    @JoinColumn(name = "id_cliente", nullable = false)
     @Schema(description = "Customer's Unique identifier.", example = "1")
     private Cliente cliente;
 

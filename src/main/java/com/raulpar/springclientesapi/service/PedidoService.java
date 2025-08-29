@@ -1,11 +1,13 @@
 package com.raulpar.springclientesapi.service;
 
+import com.raulpar.springclientesapi.dto.PedidoCreateDto;
 import com.raulpar.springclientesapi.dto.PedidoDto;
 import com.raulpar.springclientesapi.mapper.PedidoMapper;
 import com.raulpar.springclientesapi.model.Cliente;
 import com.raulpar.springclientesapi.model.Pedido;
 import com.raulpar.springclientesapi.repository.ClienteRepository;
 import com.raulpar.springclientesapi.repository.PedidoRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -48,18 +50,20 @@ public class PedidoService {
     /**
      * Guarda un nuevo pedido o actualiza uno existente.
      *
-     * @param pedidoDto Pedido a guardar
+     * @param pedidoCreateDto Pedido a guardar
      * @return Pedido guardado
      */
-    public PedidoDto save(PedidoDto pedidoDto) {
-        Pedido pedido = pedidoMapper.toEntity(pedidoDto);
-
-        Cliente cliente = clienteRepository.findById(pedidoDto.getClienteId())
+    public PedidoDto save(PedidoCreateDto pedidoCreateDto) {
+        Cliente cliente = clienteRepository.findById(pedidoCreateDto.getIdCliente())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
+
+        Pedido pedido = pedidoMapper.toEntity(pedidoCreateDto);
         pedido.setCliente(cliente);
 
-        Pedido pedidosaved = pedidoRepository.save(pedido);
-        return pedidoMapper.toDto(pedidosaved);
+        Pedido pedidoGuardado = pedidoRepository.save(pedido);
+
+        return pedidoMapper.toDto(pedidoGuardado);
+
     }
 
     /**
@@ -68,18 +72,18 @@ public class PedidoService {
      * @param id ID del pedido
      * @return true si se eliminó correctamente, false si no existe
      */
+    @Transactional
     public boolean deleteById(Long id) {
-        if(pedidoRepository.existsById(id)){
+        if (pedidoRepository.existsById(id)) {
             pedidoRepository.deleteById(id);
             return true;
-        }else{
-            return false;
         }
+        return false;
+
     }
 
     /**
      * Devuelve los pedidos realizados en una fecha específica.
-     *
      * El rango de búsqueda va desde las 00:00 hasta las 23:59 del día indicado,
      * ya que la base de datos almacena la fecha como DateTime y es necesario
      * incluir el día completo para obtener resultados precisos.

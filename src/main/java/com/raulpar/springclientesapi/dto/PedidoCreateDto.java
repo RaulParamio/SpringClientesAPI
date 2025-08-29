@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Schema(description = "DTO for creating an order")
 public class PedidoCreateDto {
-    @Schema(description = "Customer's Unique identifier", example = "1")
-    private Long clienteId;
+    @Schema(description = "Customer Unique identifier", example = "1")
+    private Long idCliente;
 }

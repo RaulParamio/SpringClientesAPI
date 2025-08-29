@@ -1,5 +1,6 @@
 package com.raulpar.springclientesapi.controller;
 
+import com.raulpar.springclientesapi.dto.PedidoCreateDto;
 import com.raulpar.springclientesapi.dto.PedidoDto;
 import com.raulpar.springclientesapi.service.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,8 +51,8 @@ public class PedidoController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PedidoDto create(@RequestBody PedidoDto pedidoDto) {
-        return pedidoService.save(pedidoDto);
+    public PedidoDto create(@RequestBody PedidoCreateDto pedidoCreateDto) {
+        return pedidoService.save(pedidoCreateDto);
     }
 
 
