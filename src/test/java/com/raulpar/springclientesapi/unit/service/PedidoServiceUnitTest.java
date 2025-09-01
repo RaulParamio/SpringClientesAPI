@@ -44,7 +44,7 @@ class PedidoServiceUnitTest {
     // Inicializa los mocks antes de cada test
     @BeforeEach
     void setUp() {
-           mocks = MockitoAnnotations.openMocks(this);
+        mocks = MockitoAnnotations.openMocks(this);
     }
 
     @AfterEach

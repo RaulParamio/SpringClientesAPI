@@ -36,7 +36,7 @@ public class ClienteService {
      * @param id  ID del cliente a actualizar
      * @param dto DTO con los datos nuevos para el cliente
      * @return Optional con el DTO detallado del cliente actualizado si se encontró y actualizó,
-     *         o un Optional vacío si no existe el cliente con ese ID
+     * o un Optional vacío si no existe el cliente con ese ID
      */
     public Optional<ClienteOutputDetailDto> update(Long id, ClienteInputDto dto) {
         return clienteRepository.findById(id)
@@ -48,7 +48,6 @@ public class ClienteService {
                 });
     }
 
-
     /**
      * Busca un cliente por su ID.
      *
@@ -57,7 +56,7 @@ public class ClienteService {
      */
     public Optional<ClienteOutputDetailDto> findById(Long id) {
         return clienteRepository.findById(id)
-        .map(clienteMapper::toDetailDto);
+                .map(clienteMapper::toDetailDto);
     }
 
     /**
@@ -93,8 +92,8 @@ public class ClienteService {
      * @return Optional con el cliente si se encuentra
      */
     public Optional<ClienteOutputDetailDto> findByDni(String dni) {
-         return clienteRepository.findByDni(dni)
-           .map(clienteMapper::toDetailDto);
+        return clienteRepository.findByDni(dni)
+                .map(clienteMapper::toDetailDto);
     }
 
 

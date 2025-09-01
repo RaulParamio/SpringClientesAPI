@@ -94,7 +94,7 @@ public class PedidoService {
     public List<PedidoDto> findByFecha(LocalDate fecha) {
         LocalDateTime desde = fecha.atStartOfDay(); // 2025-04-19T00:00:00
         LocalDateTime hasta = fecha.atTime(LocalTime.MAX); // 2025-04-19T23:59:59.999999999
-        List<Pedido> pedido =  pedidoRepository.findByFechaBetween(desde, hasta);
+        List<Pedido> pedido = pedidoRepository.findByFechaBetween(desde, hasta);
         return pedidoMapper.toDtoList(pedido);
     }
 

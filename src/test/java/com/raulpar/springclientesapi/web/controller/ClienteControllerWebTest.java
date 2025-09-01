@@ -37,8 +37,8 @@ class ClienteControllerWebTest {
     @Test
     void testGetAll() throws Exception {
         // Datos de prueba
-        ClienteOutputDto c1 = new ClienteOutputDto(1L,"12345678A", "Juan", "Pérez", "juan@gmail.com");
-        ClienteOutputDto c2 = new ClienteOutputDto(2L,"87654321B", "Lucía", "Gómez", "lucia@gmail.com");
+        ClienteOutputDto c1 = new ClienteOutputDto(1L, "12345678A", "Juan", "Pérez", "juan@gmail.com");
+        ClienteOutputDto c2 = new ClienteOutputDto(2L, "87654321B", "Lucía", "Gómez", "lucia@gmail.com");
 
         // Mock del servicio: devuelve una lista con dos clientes
         when(clienteService.findAll()).thenReturn(List.of(c1, c2));
@@ -78,7 +78,7 @@ class ClienteControllerWebTest {
     @Test
     void testDeleteFound() throws Exception {
         Long id = 1L;
-        ClienteOutputDetailDto dto = new ClienteOutputDetailDto(1L,"12345678A", "Juan", "Pérez", "juan@example.com", "Calle Mendez", "Madrid", "Madrid");
+        ClienteOutputDetailDto dto = new ClienteOutputDetailDto(1L, "12345678A", "Juan", "Pérez", "juan@example.com", "Calle Mendez", "Madrid", "Madrid");
 
         when(clienteService.deleteById(id)).thenReturn(Optional.of(dto));
 
