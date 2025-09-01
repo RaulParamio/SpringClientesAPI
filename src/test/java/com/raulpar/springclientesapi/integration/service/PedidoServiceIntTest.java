@@ -28,7 +28,7 @@ class PedidoServiceIntTest {
     private Cliente cliente;
 
     @Autowired
-    public PedidoServiceIntTest(PedidoService pedidoService, PedidoRepository pedidoRepository,ClienteRepository clienteRepository){
+    public PedidoServiceIntTest(PedidoService pedidoService, PedidoRepository pedidoRepository, ClienteRepository clienteRepository) {
         this.pedidoService = pedidoService;
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
