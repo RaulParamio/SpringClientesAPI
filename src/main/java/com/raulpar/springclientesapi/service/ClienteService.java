@@ -75,7 +75,8 @@ public class ClienteService {
      * Elimina un cliente si existe.
      *
      * @param id ID del cliente
-     * @return true si se eliminó, false si no existía
+     * @return Un Optional con el ClienteOutputDetailDto del cliente eliminado,
+     * o vacío si no existía un cliente con ese ID
      */
     public Optional<ClienteOutputDetailDto> deleteById(Long id) {
         return clienteRepository.findById(id)

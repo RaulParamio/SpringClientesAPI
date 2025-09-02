@@ -148,6 +148,8 @@ Esto permite:
     - `Cliente` y `Pedido` con `@OneToMany` / `@ManyToOne` para mantener integridad referencial.
 - **`Optional`** en servicios y repositorios:
     - Evita `NullPointerException` al buscar entidades que podrían no existir.
+- **`Lombok`** (`@Getter`, `@Setter`, `@NoArgsConstructor`, `@AllArgsConstructor`):  
+  Reduce el código repetitivo y hace las clases más limpias y fáciles de mantener.
 
 ### 2️⃣ Control de serialización
 - **`@JsonIgnore`** en entidades:
@@ -161,10 +163,25 @@ Esto permite:
 - Anotaciones como `@NotNull`, `@Size`, `@Email` en DTOs:
     - Garantizan que los datos entrantes cumplan reglas mínimas antes de persistirlos.
 
-### 5️⃣ Pruebas unitarias e integración
+### 5️⃣ Arquitectura y organización
+- Arquitectura en capas elegida para **separar responsabilidades**:
+    - **Controller** → expone la API
+    - **Service** → lógica de negocio
+    - **Repository** → acceso a datos
+    - **Model / DTO / Mapper** → entidades, objetos de transferencia y conversión
+- Esta organización permite **tests más claros y aislados** y facilita la escalabilidad y mantenibilidad del proyecto.
+
+### 6️⃣ Pruebas unitarias e integración
 - **Mockito + JUnit 5** para tests unitarios de servicios.
 - **SpringBootTest** para tests de integración, verificando el flujo completo con la base de datos.
 - **`@WebMvcTest` + `MockMvc`** para probar controladores y endpoints REST de forma aislada.
+
+### 7️⃣ Contenerización con Docker
+- Uso de **Docker con doble-stage build**:
+    - Primer stage: compilación del proyecto, instalación de dependencias y construcción del JAR.
+    - Segundo stage: imagen ligera con solo el JAR y JDK, reduciendo tamaño y consumo de recursos.
+- **Docker Compose** permite levantar la API junto con MySQL, replicando un entorno de producción en local.
+- Esta estrategia mejora eficiencia, seguridad y consistencia en los despliegues.
 
 ---
 

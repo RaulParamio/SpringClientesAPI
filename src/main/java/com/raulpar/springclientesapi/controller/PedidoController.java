@@ -6,6 +6,7 @@ import com.raulpar.springclientesapi.service.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,9 @@ public class PedidoController {
             @ApiResponse(responseCode = "200", description = "Orders found"),
     })
     @GetMapping
-    public List<PedidoDto> getAll() {
-        return pedidoService.findAll();
+    public ResponseEntity<List<PedidoDto>> getAll() {
+        List<PedidoDto> pedidos = pedidoService.findAll();
+        return ResponseEntity.ok(pedidos);
     }
 
     @Operation(summary = "Get order by ID")
@@ -47,12 +49,13 @@ public class PedidoController {
 
     @Operation(summary = "Create a new order")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Order created successfully")
+            @ApiResponse(responseCode = "201", description = "Order created successfully"),
+            @ApiResponse(responseCode = "404", description = "Customer not found")
     })
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public PedidoDto create(@RequestBody PedidoCreateDto pedidoCreateDto) {
-        return pedidoService.save(pedidoCreateDto);
+    public ResponseEntity<PedidoDto> create(@Valid @RequestBody PedidoCreateDto pedidoCreateDto) {
+        PedidoDto pedido = pedidoService.save(pedidoCreateDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pedido);
     }
 
 

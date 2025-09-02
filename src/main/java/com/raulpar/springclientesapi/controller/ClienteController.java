@@ -49,10 +49,11 @@ public class ClienteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Customer updated successfully"),
             @ApiResponse(responseCode = "404", description = "Customer not found"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+            @ApiResponse(responseCode = "400", description = "Invalid request"),
+            @ApiResponse(responseCode = "409", description = "Another customer with this DNI already exists"),
     })
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteOutputDetailDto> update(@PathVariable Long id, @RequestBody ClienteInputDto clienteDto) {
+    public ResponseEntity<ClienteOutputDetailDto> update( @Valid @PathVariable Long id, @RequestBody ClienteInputDto clienteDto) {
         return clienteservice.update(id, clienteDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -61,10 +62,10 @@ public class ClienteController {
     @Operation(summary = "Save customer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Customer saved succesfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+            @ApiResponse(responseCode = "400", description = "Invalid request"),
+            @ApiResponse(responseCode = "409", description = "Customer with this DNI already exists")
     })
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ClienteOutputDetailDto> create(@Valid @RequestBody ClienteInputDto clienteinputdto) {
         ClienteOutputDetailDto cliente = clienteservice.save(clienteinputdto);
         return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
