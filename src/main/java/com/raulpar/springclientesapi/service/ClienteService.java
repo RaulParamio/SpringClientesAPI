@@ -60,7 +60,7 @@ public class ClienteService {
     }
 
     /**
-     * Guarda o actualiza un cliente en la base de datos.
+     * Guarda un cliente en la base de datos.
      *
      * @param clientedto Objeto cliente a persistir
      * @return Cliente guardado

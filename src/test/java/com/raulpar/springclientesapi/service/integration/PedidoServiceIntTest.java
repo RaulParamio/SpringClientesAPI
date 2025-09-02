@@ -1,4 +1,4 @@
-package com.raulpar.springclientesapi.integration.service;
+package com.raulpar.springclientesapi.service.integration;
 
 import com.raulpar.springclientesapi.dto.PedidoCreateDto;
 import com.raulpar.springclientesapi.dto.PedidoDto;

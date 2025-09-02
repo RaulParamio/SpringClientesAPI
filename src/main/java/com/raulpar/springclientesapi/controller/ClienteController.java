@@ -33,7 +33,6 @@ public class ClienteController {
         return clienteservice.findAll();
     }
 
-
     @Operation(summary = "Get customer by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Customer found"),

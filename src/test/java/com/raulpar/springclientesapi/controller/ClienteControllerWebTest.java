@@ -1,6 +1,5 @@
-package com.raulpar.springclientesapi.web.controller;
+package com.raulpar.springclientesapi.controller;
 
-import com.raulpar.springclientesapi.controller.ClienteController;
 import com.raulpar.springclientesapi.dto.ClienteOutputDetailDto;
 import com.raulpar.springclientesapi.dto.ClienteOutputDto;
 import com.raulpar.springclientesapi.mapper.ClienteMapper;

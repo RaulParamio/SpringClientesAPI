@@ -1,4 +1,4 @@
-package com.raulpar.springclientesapi.unit.service;
+package com.raulpar.springclientesapi.service.unit;
 
 import com.raulpar.springclientesapi.dto.ClienteInputDto;
 import com.raulpar.springclientesapi.dto.ClienteOutputDetailDto;

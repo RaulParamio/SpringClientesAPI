@@ -1,8 +1,7 @@
 
-package com.raulpar.springclientesapi.web.controller;
+package com.raulpar.springclientesapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.raulpar.springclientesapi.controller.PedidoController;
 import com.raulpar.springclientesapi.dto.PedidoCreateDto;
 import com.raulpar.springclientesapi.dto.PedidoDto;
 import com.raulpar.springclientesapi.service.PedidoService;
