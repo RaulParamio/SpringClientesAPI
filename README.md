@@ -185,6 +185,31 @@ Esto permite:
 
 ---
 
+## 🖼️ Capturas de pantalla
+
+### 1️⃣ Swagger UI - Listado de clientes
+GET `/api/clientes` mostrando todos los clientes registrados en Swagger UI.
+
+![Swagger UI](\images\get-clientes 2025-09-02.png)
+
+### 2️⃣ Swagger UI - Listado de pedidos por fecha
+GET `/api/pedidos/fecha?fecha=2025-08-23`
+
+![Swagger UI](\images\swagger-pedidos-fecha 2025-09-02.png)
+
+### 3️⃣ Testing
+Test unitario de la clase PedidoService
+
+![Testing](\images\testing 2025-09-02.png)
+
+### 4️⃣ Clase ClienteController
+Clase `ClienteController` mostrando endpoints de la API y cómo se gestionan
+
+![Clase ClienteController](\images\ClienteController 2025-09-02 204353.png)
+
+
+---
+
 ## ▶️ Cómo ejecutar el proyecto
 
 1. Clona el repositorio:
